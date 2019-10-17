@@ -69,23 +69,22 @@ class Record(models.Model):
     book_returned = models.BooleanField(auto_created=True, default=False)
     time = models.TextField(default=datetime.now())
 
-
     def __str__(self):
         return str(self.borrowed_member)
 
 
-@receiver(signals.pre_save, sender=Record)
-def is_returned(sender, instance, **kwargs):
-    stock = instance.borrowed_book.in_stock
-    if not instance.book_returned:
-        if instance.borrowed_book.number_of_copy >= stock:
-            stock += 1
-            book = instance.borrowed_book
-            instance.book_returned = True
-            book.in_stock = stock
-            if stock > 0:
-                book.availability = True
-            book.save()
+# @receiver(signals.pre_save, sender=Record)
+# def is_returned(sender, instance, **kwargs):
+#     stock = instance.borrowed_book.in_stock
+#     if not instance.book_returned:
+#         if instance.borrowed_book.number_of_copy >= stock:
+#             stock += 1
+#             book = instance.borrowed_book
+#             instance.book_returned = True
+#             book.in_stock = stock
+#             if stock > 0:
+#                 book.availability = True
+#             book.save()
 
 
 @receiver(signals.post_save, sender=Record)

@@ -41,22 +41,24 @@ class MemberAdmin(admin.ModelAdmin):
     ordering = ('member_name',)
     form = MemberAdminForm
 
-# class RecordAdminForm(forms.ModelForm):
-#    def __init__(self, *args, **kwargs):
-#        super(RecordAdminForm, self).__init__(*args, **kwargs)
-#    def clean(self):
-#        borrowed_book =self.cleaned_data.get('borrowed_book')
-#        if borrowed_book.in_stock == 0:
-#            raise forms.ValidationError("Book is not available.", code="invalid")
-#        return self.cleaned_data
-#    def save(self, commit=True):
-#        return super(RecordAdminForm, self).save(commit)
+class RecordAdminForm(forms.ModelForm):
+   def __init__(self, *args, **kwargs):
+       super(RecordAdminForm, self).__init__(*args, **kwargs)
+
+   def clean(self):
+       borrowed_book = self.cleaned_data.get('borrowed_book')
+       is_returned = self.cleaned_data.get('is_return')
+       if not is_returned:
+           if borrowed_book.in_stock == 0:
+                   raise forms.ValidationError("Book is not available.", code="invalid")
+       return self.cleaned_data
+   def save(self, commit=True):
+       return super(RecordAdminForm, self).save(commit)
 
 class RecordAdmin(admin.ModelAdmin):
     list_display = ('borrowed_ID', 'borrowed_member', 'borrowed_book', 'issued_librarian', 'issue_date', 'return_date',
                     'is_return', 'book_returned','returned_date')
-    # form = RecordAdminForm
-
+    #form = RecordAdminForm
 
 admin.site.register(Librarian, LibrarianAdmin)
 #admin.site.register(Author, AuthorAdmin)
