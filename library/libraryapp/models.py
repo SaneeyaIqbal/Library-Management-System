@@ -15,12 +15,15 @@ class Librarian(models.Model):
         return str(self.librarian_name)
 
 
-# class Author(models.Model):
-#     author_name = models.CharField( max_length=100)
-#     about_author = models.TextField(null=True, blank= True)
-#
-#     def __str__(self):
-#        return self.author_name
+class Author(models.Model):
+    author_name = models.CharField( max_length=100)
+    about_author = models.TextField(null=True, blank= True)
+
+    def __str__(self):
+       return self.author_name
+
+    def get_title(self):
+        return self.author_name
 
 
 class Book(models.Model):
@@ -32,10 +35,13 @@ class Book(models.Model):
     availability = models.BooleanField(default=True)
     description = models.TextField(null=True,blank=True)
     price = models.IntegerField(default=0,null=True,blank=True)
-    book_author = models.CharField(max_length=50,null=True,blank=True)
+    author_name = models.ForeignKey(Author, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.book_name
+        return str(self.book_name)
+
+    def get_title(self):
+        return str(self.book_name)
 
     def is_available(self):
         if self.in_stock > 0:
@@ -56,6 +62,9 @@ class Member(models.Model):
     def __str__(self):
         return str(self.member_name)
 
+    def get_details(self):
+        return str(self.member_name)+''+str(self.member_address)
+
 
 class Record(models.Model):
     borrowed_ID = models.AutoField(primary_key=True)
@@ -68,6 +77,18 @@ class Record(models.Model):
     returned_date = models.DateField(default=date.today() + timedelta(days=7))
     book_returned = models.BooleanField(auto_created=True, default=False)
     time = models.TextField(default=datetime.now())
+    fine = models.IntegerField(default=0)
+
+    def is_fined(self):
+        if date.today() > self.return_date and not self.is_return:
+            self.fine = (date.today() - self.return_date).days * 10
+        return self.fine
+
+    def calculate(self):
+        if self.is_return:
+            return self.return_date
+
+        return 'not returned'
 
     def __str__(self):
         return str(self.borrowed_member)
