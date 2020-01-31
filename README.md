@@ -12,6 +12,7 @@ To run this in your system:
 Clone this repo in your system:
 
 git clone https://github.com/SaneeyaIqbal/Library-Management-System.git
+
 Get inside the repo, type this is terminal:
 
 cd library
