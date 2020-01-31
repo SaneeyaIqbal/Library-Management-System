@@ -11,10 +11,10 @@ To run this in your system:
 
 Clone this repo in your system:
 
-git clone https://github.com/saurabhnk-94/Library-Management-.git
+git clone https://github.com/SaneeyaIqbal/Library-Management-System.git
 Get inside the repo, type this is terminal:
 
-cd Library-Management
+cd library
 Create a virtual environment inside the repo:
 
 python3 -m venv .library
